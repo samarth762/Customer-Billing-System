@@ -1,0 +1,287 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
+int bill();
+int start();
+int bill2();
+int bill1();
+int f_bill(int nn,int n1,char item[n1][100],int qnt[nn],int price[nn]);
+int shopkeeper();
+int shopkeeper2();
+int display();
+int displayitem();
+int remove1(char *item);
+int add(char *item);
+int edit(char *item,char *new);
+struct acc
+{
+    int id;
+    char name[100];
+	char info[50];
+	struct acc *link;
+};
+typedef struct acc NODE;
+NODE *head=NULL;
+NODE *getnode(char *item)
+{
+	NODE *node;
+	node=(NODE*)malloc(sizeof(NODE));
+	strcpy(node->info,item);	
+	node->link=NULL;
+	return node;
+}
+NODE a[100];
+int b,c_id=1000,n=0,e;int a1;
+int shopkeeper()
+{
+	char pass[50],item[100];int a1;
+	printf("Enter Password:");scanf("%s",pass);//shopkeeper
+	if (strcmp("shopkeeper",pass)==0)
+	{
+		shopkeeper2();
+	}
+	else
+	{
+		printf("Entered wrong password.\nTRY AGAIN!!!!\n");
+		shopkeeper();						
+	}
+}
+int shopkeeper2()
+{	
+	int ch;char item[100],new[100];
+	printf("1.Display existing Customer\n2.To add items\n3.To edit items\n4.To remove items\n5.To display items\n6.Exit\n7.Main Option\n");
+	printf("Enter choice:");scanf("%d",&ch);	
+	switch(ch)	
+	{
+		case 1:display();
+			  break;
+		case 2:printf("Enter item(name) to add:");scanf("%s",item);add(item);
+			  break;
+		case 3:printf("Enter item(name) to edit and new item:");scanf("%s",item);scanf("%s",new);edit(item,new);
+			  break;
+		case 4:printf("Enter item(name) to remove:");scanf("%s",item);remove1(item);
+			break;
+		case 5:displayitem();
+			  break;
+		case 6:printf("Softare is off.\nThank You!!!!\n");
+			  break;
+		case 7:printf("Main Option.\n");
+			  start();
+			  break;
+	}
+}
+int remove1(char *item)
+{
+	NODE *temp,*temp1;
+	temp=head;
+	if (head==NULL)
+	{printf("No items in shop.\n");}		
+	else
+	{		
+		while(strcmp(temp->info,item)!=0)
+		{temp1=temp;temp=temp->link;}
+		temp1->link=temp->link;
+		free(temp);
+	}
+	shopkeeper2();
+}
+int edit(char *item,char *new)
+{
+
+	NODE *temp,*temp1;
+	temp=head;
+	if (head==NULL)
+	{printf("No items in shop.\n");}		
+	else
+	{		
+		while(strcmp(temp->info,item)!=0)
+		{temp1=temp;temp=temp->link;}
+		temp1=temp1->link;
+		strcpy(temp1->info,new);
+	}	
+	shopkeeper2();
+}
+int display()
+{
+	printf("------------------------------------\n");
+	printf("Name               id\n");int i=0;
+	while(a[i].id!='\0')
+	{
+		printf("%s",a[i].name);                  
+		printf("		   %d\n",a[i].id);       
+		i++;                                    
+	}	                                        
+	printf("------------------------------------\n");
+	shopkeeper2();
+}
+int displayitem()
+{
+	printf("-------------------------------------\n");
+	NODE *q;
+	q=head;
+	if (head==NULL)
+	{printf("Their is not any product details inserted in software.\n");}
+	else
+	{
+		printf("Items present in the shop.\n");	
+		while(q->link!=NULL)
+		{
+			printf("%s\n",q->info);
+			q=q->link;
+		}
+		printf("%s\n",q->info);
+	}
+	printf("-------------------------------------\n");
+	shopkeeper2();
+}
+int add(char *item)
+{
+	NODE *p=getnode(item);
+	if (head==NULL)
+	{head=p;}
+	else
+	{
+		NODE *temp;
+		temp=head;
+		while(temp->link!=NULL)
+		{temp=temp->link;}
+		temp->link=p;	
+	}
+	shopkeeper2();	
+}
+int bill1()
+{
+	int id,f1=0,n1;
+	printf("Enter id:\n");  
+     scanf("%d",&id);
+	printf("Enter number of different item:");scanf("%d",&n1);
+	int price[n1],nn=0,qnt[n1];
+     char item[n1][100];
+	for(int i=0;i<100;i++)
+        {
+            if (a[i].id==id)
+            {
+                printf("name : %s\n",a[i].name);
+			 while(nn<n1)
+                {
+                    printf("Enter item:");
+                    scanf("%s",item[nn]);
+                    printf("Enter price:");
+                    scanf("%d",&price[nn]);
+                    printf("Quantity:");
+                    scanf("%d",&qnt[nn]);
+                    nn+=1;f1+=1;
+                }
+            }
+        }
+	   if (f1==0)
+	   {
+		  printf("you are NEW customer.\nNeed to Create an Account.\n");
+		  printf("------------------------\n");
+	       bill2();
+	   }
+	   else
+	   {f_bill(nn,n1,item,qnt,price);}
+        return 0;
+}
+int bill2()
+{
+     a[n].id=c_id;
+        char x[100],temp;
+        printf("Enter name(customer):");
+	   scanf("%c",&temp);
+	   fgets(x,100,stdin);     
+        strcpy(a[n].name,x);
+        printf("Account created!!!\n");
+        c_id+=1;
+        n+=1;
+	   int n1;
+	   printf("Enter number of different items:");scanf("%d",&n1);
+        int price[n1],nn=0,qnt[n1];char item[n1][100];
+        while(nn<n1)
+        {
+             printf("Enter item:");
+                    scanf("%s",item[nn]);
+                    printf("Enter price:");
+                    scanf("%d",&price[nn]);
+                    printf("Quantity:");
+                    scanf("%d",&qnt[nn]);
+                    nn+=1;
+        }
+	   f_bill(nn,n1,item,qnt,price);
+}
+int bill()
+{
+	char q[3];
+	printf("Old CUSTOMER(old)    ||     NEW CUSTOMER(new)\n");
+	scanf("%s",q);//enter old if you are old customer; new if you are new customer of this shop. 
+	if(strcmp("new",q)==0)
+		{bill2();}
+	else if(strcmp("old",q)==0)
+		{bill1();}
+	else
+	{		
+		printf("Enter correctly.\n");
+		return bill();
+	}
+}
+int f_bill(int nn,int n1,char item[n1][100],int qnt[nn],int price[nn])
+{
+	int c=0;int tax,a;int a1;
+	time_t t;
+	time(&t);
+	printf("_______________________________________________________\n\n");
+	printf("*************************BILL**************************\n\n");
+	printf("Date & Time:%s",ctime(&t));
+	printf("--------------------------------------------------------\n");
+	printf("                  GREAT PEOPLE SHOP                     \n");
+	printf("--------------------------------------------------------\n");                                   
+	printf("Sl.No.   Description    Qty.   Rate     Amount   \n");   	    
+	for (int i=0;i<nn;i++)                                           
+	{                                                                    
+	printf("%d         %s           %d     %d       %d\n",i+1,item[i],qnt[i],price[i],qnt[i]*price[i]);                        
+	c=c+qnt[i]*price[i];                                                      
+	}                                                                  
+	printf("--------------------------------------------------------\n");
+	printf("TOTAL AMOUNT                             %d\n",c);
+	a=c*8;
+	tax=a/100;
+	printf("Tax @8percent(approx)                    %d\n",tax);
+	c=c+tax;
+	printf("--------------------------------------------------------\n");
+	if (c>=1000)
+	{printf("Discount @50\n");
+	printf("AMOUNT                                   %d\n",c-50);}
+	else if (c>100 && c<1000)
+	{printf("Discount @10\n");
+	printf("AMOUNT                                   %d\n",c-10);}
+	else
+	{printf("AMOUNT                                  %d\n",c);}	
+	printf("\n\n                  THANK YOU!!!!\n                  VISIT AGAIN\n\n");
+	printf("________________________________________________________\n\n");	
+	printf("Enter(1) to continue:\n");scanf("%d",&a1); 
+	if (a1==1)
+	 {start();}
+	 else 
+	 {printf("Software is off.\nThank You!!!!\n");}
+}
+int main()
+{
+	printf("SOFTWARE IS STARTED.....\n");
+	printf("-------------------------\n");
+	start();
+}
+int start()
+{
+	char w[50];
+	printf("customer	||	shopkeeper\n");
+	scanf("%s",w);    
+	if (strcmp("customer",w)==0)
+	{bill();}	
+	else if (strcmp("shopkeeper",w)==0)
+	{shopkeeper();}
+	else
+	{printf("Enter correctly.\n");start();}
+	return 0;
+}
